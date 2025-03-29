@@ -43,4 +43,5 @@ Thanks to (in no particular order):
 
 ## Note 
 
-Due to GitHub's limitation on uploading large files, we save the weights files at the following URL: 
+Due to GitHub's limitation on uploading large files, we save the weights files at the following URL: https://drive.google.com/drive/folders/1CDEY-h0tkaENEV_f9XltuCIB7-LRvClj?usp=drive_link
+
