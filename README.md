@@ -43,5 +43,9 @@ Thanks to (in no particular order):
 
 ## Note 
 
-Due to GitHub's limitation on uploading large files, we save the weights files at the following URL: https://drive.google.com/drive/folders/1CDEY-h0tkaENEV_f9XltuCIB7-LRvClj?usp=drive_link
+Due to GitHub's limitation on uploading large files, we save the weights files at the following URL: https://drive.google.com/drive/folders/1CDEY-h0tkaENEV_f9XltuCIB7-LRvClj?usp=drive_link <br/>
+Dataset download URL: <br/>
+* SensetUrban: http://point-cloud-analysis.cs.ox.ac.uk/
+* DALES: https://udayton.edu/engineering/research/centers/vision_lab/research/was_data_analysis_and_processing/dale.php
+* EVO: https://etsin.fairdata.fi/dataset/81e2f3ad-ed88-4dd5-9f59-401d30fac7de/data
 
