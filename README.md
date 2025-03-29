@@ -4,11 +4,11 @@ Point cloud semantic segmentation model with general multi-feature fusion and ex
 
 ## Installation 
 
-OS: Windwos 10 or 11 <br/>
-RAM: 64GB or above <br/>
-GPU: NVIDIA Quadro RTX6000 or similar <br/>
-IDE: Spyder (in Anaconda) <br/>
-Environment: Python 3.7.16, Keras 2.6.0(with Tensorflow 2.6.0 as the backend), cudatoolkit 11.3.1, cudnn 8.2.1, plyfile 0.7.2, scikit-learn 1.0.2, pandas 1.1.5, Open3D 0.17.0 
+* OS: Windwos 10 or 11 <br/>
+* RAM: 64GB or above <br/>
+* GPU: NVIDIA Quadro RTX6000 or similar <br/>
+* IDE: Spyder (in Anaconda) <br/>
+* Environment: Python 3.7.16, Keras 2.6.0(with Tensorflow 2.6.0 as the backend), cudatoolkit 11.3.1, cudnn 8.2.1, plyfile 0.7.2, scikit-learn 1.0.2, pandas 1.1.5, Open3D 0.17.0 
 
 ## Usage 
 
