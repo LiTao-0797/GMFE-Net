@@ -1,8 +1,8 @@
-##GMFE-Net 
+# GMFE-Net 
 
 Point cloud semantic segmentation model with general multi-feature fusion and extraction
 
-##Installation 
+## Installation 
 
 OS: Windwos 10 or 11 <br/>
 RAM: 64GB or above <br/>
@@ -10,7 +10,7 @@ GPU: NVIDIA Quadro RTX6000 or similar <br/>
 IDE: Spyder (in Anaconda) <br/>
 Environment: Python 3.7.16, Keras 2.6.0(with Tensorflow 2.6.0 as the backend), cudatoolkit 11.3.1, cudnn 8.2.1, plyfile 0.7.2, scikit-learn 1.0.2, pandas 1.1.5, Open3D 0.17.0 
 
-##Usage 
+## Usage 
 
 Take the SensatUrban dataset as an example. Start by activating the environment and opening Spyder. <br/>
 ![Local Image](PICS/activate_env_open_spyder.png)
@@ -29,7 +29,7 @@ The final visualization is shown in the figure below. <br/>
 
 Note: The path in the code needs to be modified to where you store the dataset. <br/>
 
-##Acknowledgments 
+## Acknowledgments 
 
 This project wouldn't have been possible without the support and contributions of several individuals and resources. <br/>
 Thanks to (in no particular order):
@@ -41,6 +41,6 @@ Thanks to (in no particular order):
 * https://github.com/leofansq/SCF-Net
 * https://keras.io/examples/vision/pointnet/
 
-##Note 
+## Note 
 
 Due to GitHub's limitation on uploading large files, we save the weights files at the following URL: 
