@@ -39,6 +39,7 @@ Thanks to (in no particular order):
 * https://github.com/hkust-vgd/shellnet
 * https://github.com/QingyongHu/RandLA-Net
 * https://github.com/leofansq/SCF-Net
+* https://github.com/WangYueFt/dgcnn
 * https://keras.io/examples/vision/pointnet/
 
 ## Note 
