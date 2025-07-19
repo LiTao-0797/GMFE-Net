@@ -39,12 +39,23 @@ num_classes = len(label_to_names)
 DATA_DIR = 'D:\\my_test\\DALESObjects'    # Here you want to modify the path to your dataset folder.
 train_dir=os.path.join(DATA_DIR, 'train')
 test_dir=os.path.join(DATA_DIR, 'test')
-validation_dir=test_dir    # The DELAS dataset is not divided into separate validation sets.
+
+def shuffle_files(files, seed=None):
+    files_array = np.array(files)
+    idx = np.arange(len(files))
+    local_random_state = np.random.RandomState(seed)
+    local_random_state.shuffle(idx)
+    return files_array[idx].tolist()
 
 train_files = glob.glob(os.path.join(train_dir, "*"))
+train_files=shuffle_files(train_files, seed=42)
+num_val_data=int(len(train_files)*0.2)
+validation_files=train_files[:num_val_data]
+train_files=train_files[num_val_data:]
+
 test_files = glob.glob(os.path.join(test_dir, "*"))
-validation_files=test_files
-files = np.sort(np.hstack((train_files, test_files)))
+
+files = np.sort(np.hstack((train_files, validation_files, test_files)))
 
 def get_file_name(file_path):
     file_name=[]
@@ -71,6 +82,8 @@ for i, file_path in enumerate(files):
     cloud_name = file_path.split('\\')[-1][:-4]
     if cloud_name in val_file_name:
         cloud_split = 'validation'
+    elif cloud_name in test_file_name:
+        cloud_split = 'test'
     else:
         cloud_split = 'training'
 
@@ -90,11 +103,6 @@ for i, file_path in enumerate(files):
     input_colors[cloud_split] += [sub_colors]
     input_labels[cloud_split] += [sub_labels]
     input_names[cloud_split] += [cloud_name]
-
-input_trees['test']=input_trees['validation']
-input_colors['test']=input_colors['validation']
-input_labels['test']=input_labels['validation']
-input_names['test']=input_names['validation']
 
 # Part of the hyperparameters
 train_steps = 2500
