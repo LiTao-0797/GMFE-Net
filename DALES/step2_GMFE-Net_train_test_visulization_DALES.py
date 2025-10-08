@@ -440,13 +440,65 @@ lr_scheduler = tf.keras.optimizers.schedules.PolynomialDecay(
     end_lr,
     power=0.5)
 
-def minibatches(inputs=None, inputs2=None,targets=None, batch_size=None):
+cfg_data_aug={'jitter':True, 'flip': True, 'rot': True, 'scaled': True}
+
+def data_Augment(xyz, data_augmentations, prob=0.6):
+    jitter = data_augmentations["jitter"]
+    flip = data_augmentations["flip"] 
+    rot = data_augmentations["rot"]
+    scale = data_augmentations["scaled"]
+    m = np.eye(3)
+
+    if scale and np.random.rand() < prob:
+        scale_xy = np.random.uniform(0.8, 1.2, 2)
+        scale_z = np.random.uniform(0.95, 1.05, 1)
+        scale = np.concatenate([scale_xy, scale_z])
+        m = m * scale
+
+    if jitter and np.random.rand() < prob:
+        m += np.random.randn(3, 3) * 0.1
+
+    if flip and np.random.rand() < prob:
+        m[0][0] *= np.random.randint(0, 2) * 2 - 1
+
+    if rot and np.random.rand() < prob:
+        theta = np.random.rand() * 2 * math.pi
+        m = np.matmul(m, [[math.cos(theta), math.sin(theta), 0],
+                          [-math.sin(theta), math.cos(theta), 0], [0, 0, 1]])
+
+    return np.matmul(xyz, m)
+
+
+def batch_Data_Augment(xyz_batch, data_augmentations, prob=0.6):
+    batch_size = xyz_batch.shape[0]
+    augmented_batch = np.zeros_like(xyz_batch)
+    
+    for i in range(batch_size):
+        augmented_batch[i] = data_Augment(xyz_batch[i], data_augmentations, prob)
+    
+    return augmented_batch
+
+
+def minibatches(inputs=None, inputs2=None, targets=None, batch_size=None, 
+                shuffle=True, augment=False, data_augmentations=None, augment_prob=0.6):
+    data_len = len(inputs)
     while 1:
         assert len(inputs) == len(targets)
-        for start_idx in range(len(inputs)//batch_size):
-            excerpt = slice(start_idx*batch_size, start_idx*batch_size + batch_size)
-            yield [inputs[excerpt],inputs2[excerpt]], targets[excerpt]
-
+        
+        indices = np.arange(len(inputs))
+        if shuffle:
+            np.random.shuffle(indices)
+        
+        for start_idx in range(0, data_len, batch_size):
+            end_idx = min(start_idx + batch_size, data_len)
+            batch_indices = indices[start_idx:end_idx]
+            batch_inputs = inputs[batch_indices]
+            batch_inputs2 = inputs2[batch_indices]
+            batch_targets = targets[batch_indices]
+            if augment:
+                batch_inputs = batch_Data_Augment(batch_inputs, data_augmentations, augment_prob)
+            yield [batch_inputs, batch_inputs2], batch_targets
+            
 timestamp=time.time()
 local_time=time.localtime(timestamp)
 current_year=local_time.tm_year
@@ -621,13 +673,19 @@ if press_key=='1':
                                                         save_best_only=True,
                                                         save_weights_only=True)
 
-    history=GMFE_Net.fit(minibatches(train_xyz,train_rgb,train_label,batch_size),
-                          steps_per_epoch=len(train_xyz)//batch_size,
-                          validation_data=minibatches(val_xyz,val_rgb,val_label,batch_size),
-                          validation_steps=len(val_xyz)//batch_size,
-                          epochs=epochs,
-                          callbacks=[checkpoint_callback,
-                                     keras.callbacks.EarlyStopping(monitor="val_accuracy", patience=15)]) 
+    history=GMFE_Net.fit(minibatches(train_xyz,train_rgb,train_label,batch_size,shuffle=True,
+                                     augment=True, data_augmentations=cfg_data_aug, 
+                                     augment_prob=0.6),
+                        steps_per_epoch=len(train_xyz)//batch_size,
+                        validation_data=minibatches(val_xyz,val_rgb,val_label,batch_size,
+                                                    shuffle=False, augment=False, 
+                                                    data_augmentations=cfg_data_aug, 
+                                                    augment_prob=0.6),
+                        validation_steps=len(val_xyz)//batch_size,
+                        epochs=epochs,
+                        callbacks=[checkpoint_callback,
+                                   keras.callbacks.EarlyStopping(monitor="val_accuracy", 
+                                                                 patience=15)]) 
 
     t2=time.time()
     print('Total training time:',(t2-t1)/60/60,'hours.')
@@ -664,13 +722,19 @@ elif press_key=='2':
                                                         save_best_only=True,
                                                         save_weights_only=True)
 
-    history=GMFE_Net.fit(minibatches(train_xyz,train_rgb,train_label,batch_size),
-                          steps_per_epoch=len(train_xyz)//batch_size,
-                          validation_data=minibatches(val_xyz,val_rgb,val_label,batch_size),
-                          validation_steps=len(val_xyz)//batch_size,
-                          epochs=epochs,
-                          callbacks=[checkpoint_callback,
-                                      keras.callbacks.EarlyStopping(monitor="val_accuracy", patience=15)]) 
+    history=GMFE_Net.fit(minibatches(train_xyz,train_rgb,train_label,batch_size,shuffle=True,
+                                     augment=True, data_augmentations=cfg_data_aug, 
+                                     augment_prob=0.6),
+                        steps_per_epoch=len(train_xyz)//batch_size,
+                        validation_data=minibatches(val_xyz,val_rgb,val_label,batch_size,
+                                                    shuffle=False, augment=False, 
+                                                    data_augmentations=cfg_data_aug, 
+                                                    augment_prob=0.6),
+                        validation_steps=len(val_xyz)//batch_size,
+                        epochs=epochs,
+                        callbacks=[checkpoint_callback,
+                                   keras.callbacks.EarlyStopping(monitor="val_accuracy", 
+                                                                 patience=15)]) 
 
     t2=time.time()
     print('Total training time:',(t2-t1)/60/60,'hours.')
@@ -931,4 +995,5 @@ elif press_key=='6':
 
 else:
     pass
+
 
