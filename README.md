@@ -1,6 +1,7 @@
 # GMFE-Net<!----> 
 
 Point cloud semantic segmentation model with general multi-feature fusion and extraction.<!---->
+The link to the paper is: https://doi.org/10.1080/01431161.2025.2603691
 
 ## Installation 
 
